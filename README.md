@@ -1,6 +1,4 @@
 <h1 align="center">
-  <img src="https://asset.laftel.net/static/media/purple.e17b0b50.svg" alt="Laftel Logo" width="50">
-  <br>
   Laftel.rs
 </h1>
 
