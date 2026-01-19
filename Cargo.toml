@@ -1,0 +1,25 @@
+[package]
+name = "laftel-rs"
+version = "0.0.1"
+edition = "2021"
+description = "A Rust wrapper for the Laftel.net API"
+authors = ["KimKyuRae <mootomgame@gmail.com>"]
+license = "gpl-3.0"
+repository = "https://github.com/KakouLabs/Laftel-rs"
+keywords = ["laftel", "api", "wrapper", "anime"]
+categories = ["api-bindings"]
+
+[dependencies]
+reqwest = { version = "0.12", features = ["json"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "2.0"
+tokio = { version = "1.0", features = ["full"], optional = true }
+
+[features]
+default = ["async"]
+async = ["dep:tokio"]
+blocking = ["reqwest/blocking"]
+
+[dev-dependencies]
+tokio = { version = "1.0", features = ["full"] }

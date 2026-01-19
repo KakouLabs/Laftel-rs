@@ -1,83 +1,78 @@
-<h3 align="center"> <img src="https://asset.laftel.net/static/media/purple.e17b0b50.svg" alt="img" width="30" height=""> Laftel <img src="https://asset.laftel.net/static/media/purple.e17b0b50.svg" alt="img" width="30" height=""> </h3>
+<h1 align="center">
+  <img src="https://asset.laftel.net/static/media/purple.e17b0b50.svg" alt="Laftel Logo" width="50">
+  <br>
+  Laftel.rs
+</h1>
 
-<h6 align="center">Unofficial Python Laftel.net API Wrapper</h6>
+<p align="center">
+  <strong>Unofficial Rust Laftel.net API Wrapper</strong>
+</p>
 
-<div align="center" id="badges"> <img src="https://img.shields.io/pypi/pyversions/laftel?color=816BFF&style=flat-square"> <img src="https://img.shields.io/pypi/v/laftel?color=816BFF&label=laftel&logo=python&logoColor=816BFF&style=flat-square"> <img src="https://img.shields.io/pypi/l/laftel?color=816BFF&logo=gnu&logoColor=816BFF&style=flat-square"> <img src="https://img.shields.io/pypi/dm/laftel?color=816BFF&style=flat-square"> <img src="https://img.shields.io/pypi/status/laftel?color=816BFF&style=flat-square">  </div>
+<p align="center">
+  <a href="https://crates.io/crates/laftel-rs"><img src="https://img.shields.io/crates/v/laftel-rs.svg?style=flat-square&color=816BFF" alt="Crates.io"></a>
+  <a href="https://docs.rs/laftel-rs"><img src="https://img.shields.io/badge/docs-latest-816BFF.svg?style=flat-square" alt="Docs.rs"></a>
+  <img src="https://img.shields.io/crates/l/laftel-rs?color=816BFF&style=flat-square" alt="License">
+</p>
 
 ---
 
-## Installation
+## 📦 Installation
 
-Requires Python 3.6 or upper
+Add this to your `Cargo.toml`:
 
-```bash
-python3 -m pip install laftel
+```toml
+[dependencies]
+laftel-rs = "0.1.0"
+tokio = { version = "1.0", features = ["full"] } # For async support
 ```
 
-## Usage
+## 🛠️ Usage
 
-```python
-import laftel
+### Asynchronous (Default)
 
-# Synchronous
-def main():
-    laftel.sync.searchAnime("전생슬") # -> List[SearchResult]
-    laftel.sync.getAnimeInfo(SerachResult.id) # -> AnimeInfo
+```rust
+use laftel_rs::LaftelClient;
 
-# Asynchronous
-async def main():
-    await laftel.searchAnime("전생슬") # -> List[SearchResult]
-    await laftel.getAnimeInfo(SerachResult.id) # -> AnimeInfo
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = LaftelClient::new();
+    
+    // Search for anime
+    let results = client.search_anime("전생슬").await?;
+    
+    if let Some(first) = results.first() {
+        println!("Found: {} ({})", first.name, first.url());
+        
+        // Get detailed information
+        let info = client.get_anime_info(first.id).await?;
+        println!("Summary: {}", info.content);
+    }
+    
+    Ok(())
+}
 ```
 
-## Models
+### Synchronous (Blocking)
 
-```python
-SearchResult:
+```rust
+use laftel_rs::blocking::LaftelBlockingClient;
 
-    id: int # Anime ID (애니 아이디)
-    name: str # Anime Title (애니 제목)
-    url: str # Anime Link (애니 링크)
-    image: str # Cover image URL (커버 사진 URL)
-    adultonly: bool # Adult Content (성인인증 필요 여부)
-    genres: List[str] # Genres in korean string (장르 태그 목록)
-
-    get_data: Callable # Function returns AnimeInfo for this anime (AnimeInfo 가져오는 함수)
-
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let client = LaftelBlockingClient::new();
+    
+    let results = client.search_anime("전생슬")?;
+    for result in results {
+        println!("- {}", result.name);
+    }
+    
+    Ok(())
+}
 ```
 
-```python
-AnimeInfo:
+## 📜 License
 
-    id: int  # Anime ID (애니 아이디)
-    name: str  # Anime Title (애니 제목)
-    url: str  # Anime Link (애니 링크)
-    image: str  # Cover image URL (커버 사진 URL)
-    content: str  # Summary of anime (애니 줄거리)
-    ended: bool  # Anime complete or not (애니 완결 여부)
-    awards: List[str]  # Arards that granted to anime (애니가 받은 상 목록)
+This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) file for details.
 
-    content_rating: str  # Content Rating in korean (콘텐츠 등급 - 00세 이용가)
-    adultonly: bool  # Adult Content (성인인증 필요 여부)
-    viewable: bool  # Available in Laftel (라프텔 시청 가능 여부)
-    genres: List[str]  # Genres in korean string (장르 태그 목록)
-    tags: List[str]  # Anime tags from Laftel (라프텔이 붙인 태그)
+## 🤝 Acknowledgments
 
-    air_year_quarter: str  # Airing quarter (방영분기 - 2020년 1분기)
-    air_day: str  # Airing day (방영 요일)
-    avg_rating: float  # Average User Rating out of 5 (5점 만점 중 평균 별점)
-
-    series_id: Optional[int]  # Series ID (시리즈 아이디)
-    production: str  # Production company (제작사)
-```
-
-## Discord Bot Example
-<img width="615" alt="image" src="https://user-images.githubusercontent.com/30466064/147765695-1b33c6cc-9954-4e5b-b1f5-53122aca7759.png">
-<img width="596" alt="image" src="https://user-images.githubusercontent.com/30466064/147765773-16b1d228-675f-4766-8e57-5baff42ffaf3.png">
-
-## Example
-
-[View example.py](example.py)
-
-
-
+Inspired by the [original Python implementation](https://github.com/Alfex4936/python-laftel).
