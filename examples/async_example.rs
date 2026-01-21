@@ -9,11 +9,11 @@ use laftel_rs::LaftelClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = LaftelClient::new();
+    let client = LaftelClient::new()?;
 
     // 애니메이션 검색 (예: "슬라임")
     println!("'슬라임' 검색 중...\n");
-    let results = client.search_anime("슬라임").await?;
+    let results = client.search_anime("죠죠").await?;
 
     println!("검색 결과 ({} 개):", results.len());
     for result in results.iter().take(5) {

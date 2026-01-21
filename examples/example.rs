@@ -10,7 +10,7 @@ use laftel_rs::blocking::LaftelBlockingClient;
 use std::io::{self, BufRead, Write};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = LaftelBlockingClient::new();
+    let client = LaftelBlockingClient::new()?;
 
     // 검색어 입력
     print!("검색할 애니 이름을 입력하세요: ");

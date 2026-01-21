@@ -88,17 +88,13 @@ pub struct SearchEpisode {
 
 impl SearchEpisode {
     pub fn asset_id(&self) -> Option<String> {
-        self.thumbnail_path
-            .split('/')
-            .nth(4)
-            .and_then(|_start| {
-                 let parts = self.thumbnail_path.split('/').skip(4).take(3);
-                 if parts.clone().count() == 3 {
-                     Some(parts.collect::<Vec<&str>>().join("/"))
-                 } else {
-                     None
-                 }
-            })
+        let mut parts = self.thumbnail_path.split('/').skip(4);
+        
+        let p1 = parts.next()?;
+        let p2 = parts.next()?;
+        let p3 = parts.next()?;
+        
+        Some(format!("{}/{}/{}", p1, p2, p3))
     }
 }
 

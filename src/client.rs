@@ -9,24 +9,18 @@ pub struct LaftelClient {
     http_client: Client,
 }
 
-impl Default for LaftelClient {
-    fn default() -> Self {
-        Self::new()
-    }
-}
 
 impl LaftelClient {
-    pub fn new() -> Self {
+    pub fn new() -> Result<Self> {
         let mut headers = header::HeaderMap::new();
-        headers.insert("laftel", "TeJava".parse().unwrap());
+        headers.insert("laftel", header::HeaderValue::from_static("TeJava"));
 
         let http_client = Client::builder()
             .user_agent(USER_AGENT)
             .default_headers(headers)
-            .build()
-            .expect("Failed to create HTTP client");
+            .build()?;
 
-        Self { http_client }
+        Ok(Self { http_client })
     }
 
     pub async fn get_anime_info(&self, id: u64) -> Result<AnimeInfo> {
@@ -72,14 +66,15 @@ impl LaftelClient {
     pub async fn search_episodes(&self, id: u64) -> Result<Vec<SearchEpisode>> {
         let url = "https://laftel.net/api/episodes/v2/list/";
         
+        let id_str = id.to_string();
         let response = self.http_client
             .get(url)
             .query(&[
-                ("item_id", id.to_string()),
-                ("sort", "oldest".to_string()),
-                ("limit", "50".to_string()),
-                ("show_playback_offset", "true".to_string()),
-                ("offset", "0".to_string()),
+                ("item_id", id_str.as_str()),
+                ("sort", "oldest"),
+                ("limit", "50"),
+                ("show_playback_offset", "true"),
+                ("offset", "0"),
             ])
             .send()
             .await?
@@ -101,6 +96,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_client_creation() {
-        let _client = LaftelClient::new();
+        let _client = LaftelClient::new().unwrap();
     }
 }

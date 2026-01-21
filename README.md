@@ -33,7 +33,7 @@ use laftel_rs::LaftelClient;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = LaftelClient::new();
+    let client = LaftelClient::new()?;
     
     // Search for anime
     let results = client.search_anime("전생슬").await?;
@@ -56,7 +56,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 use laftel_rs::blocking::LaftelBlockingClient;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let client = LaftelBlockingClient::new();
+    let client = LaftelBlockingClient::new()?;
     
     let results = client.search_anime("전생슬")?;
     for result in results {
@@ -73,4 +73,4 @@ This project is licensed under the GPL-3.0 License - see the [LICENSE](LICENSE) 
 
 ## 🤝 Acknowledgments
 
-Inspired by the [original Python implementation](https://github.com/Alfex4936/python-laftel).
+Inspired by the [original Python implementation](https://github.com/331leo/Laftel).
