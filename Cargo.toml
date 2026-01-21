@@ -1,6 +1,6 @@
 [package]
 name = "laftel-rs"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 description = "A Rust wrapper for the Laftel.net API"
 authors = ["KimKyuRae <mootomgame@gmail.com>"]
